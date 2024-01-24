@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                // Build steps
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Test steps
+            }
+        }
+
+        stage('Deploy to Staging') {
+            when {
+                branch 'master'
+            }
+            steps {
+                // Deployment to staging
+            }
+        }
+
+        stage('Deploy to Production') {
+            when {
+                expression { params.DEPLOY_TO_PROD == 'true' }
+            }
+            steps {
+                // Deployment to production
+            }
+        }
+    }
+
+    post {
+        always {
+            // Cleanup steps
+        }
+    }
+}
