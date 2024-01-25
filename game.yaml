@@ -4,13 +4,13 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // Build steps
+        Build steps
             }
         }
 
         stage('Test') {
             steps {
-                // Test steps
+        Test steps
             }
         }
 
@@ -19,7 +19,7 @@ pipeline {
                 branch 'master'
             }
             steps {
-                // Deployment to staging
+         Deployment to staging
             }
         }
 
@@ -28,14 +28,14 @@ pipeline {
                 expression { params.DEPLOY_TO_PROD == 'true' }
             }
             steps {
-                // Deployment to production
+            Deployment to production
             }
         }
     }
 
     post {
         always {
-            // Cleanup steps
+        Cleanup steps
         }
     }
 }
