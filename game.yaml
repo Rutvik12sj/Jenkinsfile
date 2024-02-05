@@ -4,38 +4,20 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-        Build steps
+                // Your build steps here
             }
         }
 
         stage('Test') {
             steps {
-        Test steps
+                // Your test steps here
             }
         }
 
-        stage('Deploy to Staging') {
-            when {
-                branch 'master'
-            }
+        stage('Deploy') {
             steps {
-         Deployment to staging
+                // Your deployment steps here
             }
-        }
-
-        stage('Deploy to Production') {
-            when {
-                expression { params.DEPLOY_TO_PROD == 'true' }
-            }
-            steps {
-            Deployment to production
-            }
-        }
-    }
-
-    post {
-        always {
-        Cleanup steps
         }
     }
 }
