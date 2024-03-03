@@ -1,34 +1,29 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
 trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
-
-variables:
-  solution: '**/*.sln'
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
+  vmImage: 'ubuntu-latest'
 
 steps:
-- task: NuGetToolInstaller@1
-
-- task: NuGetCommand@2
+- task: Docker@2
   inputs:
-    restoreSolution: '$(solution)'
+    containerRegistry: 'monopoly001'
+    repository: 'exampledockerimage'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    tags: '$(Build.BuildId)'
 
-- task: VSBuild@1
+- task: AzureCLI@2
   inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    azureSubscription: '05800a08-61c3-47d9-9614-bed851be39a9'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az aks get-credentials --resource-group example-resources --name exampleaks --overwrite-existing
 
-- task: VSTest@2
+- task: KubernetesManifest@0
   inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+    action: 'deploy'
+    kubernetesServiceConnection: 'YourKubernetesServiceConnection'
+    namespace: 'test'
+    manifests: '**/*.yaml'
